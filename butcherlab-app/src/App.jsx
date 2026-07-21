@@ -5,44 +5,66 @@ import CartBar from './CartBar'
 import SearchBar from './SearchBar'
 import CategoryFilter from './CategoryFilter'
 import AdminPanel from './AdminPanel'
+import { supabase } from './supabase'
 
 function App() {
-  const [prodotti, setProdotti] = useState(() => {
-      const catalogoSalvato = localStorage.getItem(
-            'butcherlab-prodotti'
-                )
-
-                    return catalogoSalvato
-                          ? JSON.parse(catalogoSalvato)
-                                : prodottiIniziali
-                                  })
+      const [prodotti, setProdotti] = useState([])
+const [databaseCaricato, setDatabaseCaricato] = useState(false)
 
                                     const [carrello, setCarrello] = useState({})
                                       const [ricerca, setRicerca] = useState('')
                                         const [categoria, setCategoria] = useState('Tutti')
                                           const [adminAperto, setAdminAperto] = useState(false)
-                                          const apriAdmin = () => {
-                                                  const pinInserito = window.prompt(
-                                                      'Inserisci il PIN amministratore'
-                                                        )
+                                          const apriAdmin = async () => {
+  const email = window.prompt(
+    'Inserisci la tua email amministratore'
+  )
 
-                                                          if (pinInserito === '2026') {
-                                                              setAdminAperto(true)
-                                                                  return
-                                                                    }
+  if (!email) return
 
-                                                                      if (pinInserito !== null) {
-                                                                          alert('PIN errato')
-                                                                            }
-                                                                            }
-                                          
+  const password = window.prompt(
+    'Inserisci la password amministratore'
+  )
 
-                                            useEffect(() => {
-                                                localStorage.setItem(
-                                                      'butcherlab-prodotti',
-                                                            JSON.stringify(prodotti)
-                                                                )
-                                                                  }, [prodotti])
+  if (!password) return
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email: email.trim(),
+    password: password,
+  })
+
+  if (error) {
+    console.error('Errore login:', error)
+    alert('Email o password non corretti')
+    return
+  }
+
+  setAdminAperto(true)
+}
+                                                                            useEffect(() => {
+  const caricaProdotti = async () => {
+  const { data, error } = await supabase
+    .from('prodotti')
+    .select('*')
+    .order('id')
+
+  if (error) {
+    console.error('Errore caricamento prodotti:', error)
+    alert('Errore nel collegamento al database')
+    return
+  }
+
+  setProdotti(
+    (data || []).map((prodotto) => ({
+      ...prodotto,
+      prezzo: Number(prodotto.prezzo),
+    }))
+  )
+
+  setDatabaseCaricato(true)
+}                                                                            
+caricaProdotti()
+}, [])
 
                                                                     const prodottiFiltrati = prodotti.filter((prodotto) => {
                                                                         const testo =
@@ -185,9 +207,17 @@ function App() {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         className="product-card"
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         key={prodotto.id}
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       >
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <div className="product-image">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        {prodotto.simbolo}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     <div className="product-image">
+  {prodotto.immagine_url ? (
+    <img
+      src={prodotto.immagine_url}
+      alt={prodotto.nome}
+      className="product-image-photo"
+    />
+  ) : (
+    prodotto.simbolo
+  )}
+</div>   
 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         <div className="product-info">
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           <h3>{prodotto.nome}</h3>
