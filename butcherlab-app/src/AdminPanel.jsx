@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { supabase } from './supabase'
 
 const prodottoVuoto = {
@@ -10,15 +10,143 @@ const prodottoVuoto = {
   immagine_url: '',
 }
 
+const impostazioniVuote = {
+  id: null,
+  business_name: 'BUTCHER LAB',
+  subtitle: 'Macelleria e carni selezionate',
+  address: 'Corso Matteotti 20, Orta Nova (FG)',
+  phone: '3207177369',
+  whatsapp: '3207177369',
+  opening_hours: 'Lun-Sab 08:00-13:30 | 17:00-20:30',
+  about_text:
+    'BUTCHER LAB seleziona ogni giorno carni di qualità, preparazioni artigianali e prodotti scelti con passione.',
+  hero_title: 'La migliore carne, ogni giorno',
+  hero_subtitle: 'Carne di qualità, scelta con passione',
+  maps_url: '',
+  instagram_url: '',
+  facebook_url: '',
+}
+
 function AdminPanel({ prodotti, setProdotti, onClose }) {
+  const [sezioneAttiva, setSezioneAttiva] =
+    useState('catalogo')
+
   const [nuovoProdotto, setNuovoProdotto] =
     useState(prodottoVuoto)
 
-  const [immagineNuovoProdotto, setImmagineNuovoProdotto] =
-    useState(null)
+  const [
+    immagineNuovoProdotto,
+    setImmagineNuovoProdotto,
+  ] = useState(null)
 
   const [caricamentoImmagine, setCaricamentoImmagine] =
     useState(false)
+
+  const [impostazioni, setImpostazioni] =
+    useState(impostazioniVuote)
+
+  const [
+    caricamentoImpostazioni,
+    setCaricamentoImpostazioni,
+  ] = useState(true)
+
+  const [
+    salvataggioImpostazioni,
+    setSalvataggioImpostazioni,
+  ] = useState(false)
+
+  useEffect(() => {
+    caricaImpostazioni()
+  }, [])
+
+  const caricaImpostazioni = async () => {
+    setCaricamentoImpostazioni(true)
+
+    const { data, error } = await supabase
+      .from('site_settings')
+      .select('*')
+      .order('id', { ascending: true })
+      .limit(1)
+      .maybeSingle()
+
+    if (error) {
+      console.error('Errore impostazioni:', error)
+      alert('Errore durante il caricamento delle impostazioni')
+      setCaricamentoImpostazioni(false)
+      return
+    }
+
+    if (data) {
+      setImpostazioni({
+        ...impostazioniVuote,
+        ...data,
+      })
+    }
+
+    setCaricamentoImpostazioni(false)
+  }
+
+  const aggiornaImpostazione = (campo, valore) => {
+    setImpostazioni((attuali) => ({
+      ...attuali,
+      [campo]: valore,
+    }))
+  }
+
+  const salvaImpostazioni = async () => {
+    setSalvataggioImpostazioni(true)
+
+    const datiDaSalvare = {
+      business_name: impostazioni.business_name.trim(),
+      subtitle: impostazioni.subtitle.trim(),
+      address: impostazioni.address.trim(),
+      phone: impostazioni.phone.trim(),
+      whatsapp: impostazioni.whatsapp.trim(),
+      opening_hours: impostazioni.opening_hours.trim(),
+      about_text: impostazioni.about_text.trim(),
+      hero_title: impostazioni.hero_title.trim(),
+      hero_subtitle: impostazioni.hero_subtitle.trim(),
+      maps_url: impostazioni.maps_url.trim(),
+      instagram_url: impostazioni.instagram_url.trim(),
+      facebook_url: impostazioni.facebook_url.trim(),
+      updated_at: new Date().toISOString(),
+    }
+
+    let risultato
+
+    if (impostazioni.id) {
+      risultato = await supabase
+        .from('site_settings')
+        .update(datiDaSalvare)
+        .eq('id', impostazioni.id)
+        .select()
+        .single()
+    } else {
+      risultato = await supabase
+        .from('site_settings')
+        .insert(datiDaSalvare)
+        .select()
+        .single()
+    }
+
+    if (risultato.error) {
+      console.error(
+        'Errore salvataggio impostazioni:',
+        risultato.error
+      )
+      alert('Errore durante il salvataggio')
+      setSalvataggioImpostazioni(false)
+      return
+    }
+
+    setImpostazioni({
+      ...impostazioniVuote,
+      ...risultato.data,
+    })
+
+    setSalvataggioImpostazioni(false)
+    alert('Impostazioni salvate correttamente')
+  }
 
   const modificaProdotto = async (id, campo, valore) => {
     const valoreCorretto =
@@ -231,43 +359,177 @@ function AdminPanel({ prodotti, setProdotti, onClose }) {
 
     setNuovoProdotto(prodottoVuoto)
     setImmagineNuovoProdotto(null)
-  }
-const esciAdmin = async () => {
-  const { error } = await supabase.auth.signOut()
-
-  if (error) {
-    console.error('Errore logout:', error)
-    alert('Errore durante la disconnessione')
-    return
+    alert('Prodotto aggiunto correttamente')
   }
 
-  onClose()
-}
+  const esciAdmin = async () => {
+    const { error } = await supabase.auth.signOut()
+
+    if (error) {
+      console.error('Errore logout:', error)
+      alert('Errore durante la disconnessione')
+      return
+    }
+
+    onClose()
+  }
+
   return (
     <div className="admin-overlay">
       <section className="admin-panel">
         <div className="admin-header">
           <div>
             <p>AREA RISERVATA</p>
-            <h2>GESTIONE CATALOGO</h2>
+            <h2>GESTIONE BUTCHER LAB</h2>
           </div>
 
           <button onClick={onClose}>×</button>
         </div>
 
-        <div className="admin-products">
-          {prodotti.map((prodotto) => (
-            <article
-              className="admin-product-edit"
-              key={prodotto.id}
-            >
-              {prodotto.immagine_url && (
-                <img
-                  src={prodotto.immagine_url}
-                  alt={prodotto.nome}
-                  className="admin-product-image"
-                />
-              )}
+        <div className="admin-tabs">
+          <button
+            type="button"
+            className={
+              sezioneAttiva === 'catalogo'
+                ? 'admin-tab active'
+                : 'admin-tab'
+            }
+            onClick={() => setSezioneAttiva('catalogo')}
+          >
+            CATALOGO
+          </button>
+
+          <button
+            type="button"
+            className={
+              sezioneAttiva === 'impostazioni'
+                ? 'admin-tab active'
+                : 'admin-tab'
+            }
+            onClick={() =>
+              setSezioneAttiva('impostazioni')
+            }
+          >
+            GESTIONE SITO
+          </button>
+        </div>
+
+        {sezioneAttiva === 'catalogo' && (
+          <>
+            <div className="admin-products">
+              {prodotti.map((prodotto) => (
+                <article
+                  className="admin-product-edit"
+                  key={prodotto.id}
+                >
+                  {prodotto.immagine_url && (
+                    <img
+                      src={prodotto.immagine_url}
+                      alt={prodotto.nome}
+                      className="admin-product-image"
+                    />
+                  )}
+
+                  <label>
+                    Foto prodotto
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      disabled={caricamentoImmagine}
+                      onChange={(evento) =>
+                        modificaImmagineProdotto(
+                          prodotto.id,
+                          evento.target.files?.[0]
+                        )
+                      }
+                    />
+                  </label>
+
+                  <input
+                    type="text"
+                    value={prodotto.nome}
+                    placeholder="Nome prodotto"
+                    onChange={(evento) =>
+                      modificaProdotto(
+                        prodotto.id,
+                        'nome',
+                        evento.target.value
+                      )
+                    }
+                  />
+
+                  <textarea
+                    value={prodotto.descrizione || ''}
+                    placeholder="Descrizione"
+                    onChange={(evento) =>
+                      modificaProdotto(
+                        prodotto.id,
+                        'descrizione',
+                        evento.target.value
+                      )
+                    }
+                  />
+
+                  <div className="admin-row">
+                    <input
+                      type="text"
+                      value={prodotto.simbolo || ''}
+                      placeholder="Emoji"
+                      onChange={(evento) =>
+                        modificaProdotto(
+                          prodotto.id,
+                          'simbolo',
+                          evento.target.value
+                        )
+                      }
+                    />
+
+                    <input
+                      type="number"
+                      step="0.10"
+                      min="0"
+                      value={prodotto.prezzo}
+                      placeholder="Prezzo"
+                      onChange={(evento) =>
+                        modificaProdotto(
+                          prodotto.id,
+                          'prezzo',
+                          evento.target.value
+                        )
+                      }
+                    />
+                  </div>
+
+                  <select
+                    value={prodotto.categoria}
+                    onChange={(evento) =>
+                      modificaProdotto(
+                        prodotto.id,
+                        'categoria',
+                        evento.target.value
+                      )
+                    }
+                  >
+                    <option>Cavallo</option>
+                    <option>Pollo</option>
+                    <option>Maiale</option>
+                    <option>Preparati</option>
+                  </select>
+
+                  <button
+                    className="admin-delete"
+                    onClick={() =>
+                      eliminaProdotto(prodotto.id)
+                    }
+                  >
+                    ELIMINA PRODOTTO
+                  </button>
+                </article>
+              ))}
+            </div>
+
+            <div className="admin-new-product">
+              <h3>AGGIUNGI PRODOTTO</h3>
 
               <label>
                 Foto prodotto
@@ -276,9 +538,8 @@ const esciAdmin = async () => {
                   accept="image/jpeg,image/png,image/webp"
                   disabled={caricamentoImmagine}
                   onChange={(evento) =>
-                    modificaImmagineProdotto(
-                      prodotto.id,
-                      evento.target.files?.[0]
+                    setImmagineNuovoProdotto(
+                      evento.target.files?.[0] || null
                     )
                   }
                 />
@@ -286,40 +547,37 @@ const esciAdmin = async () => {
 
               <input
                 type="text"
-                value={prodotto.nome}
                 placeholder="Nome prodotto"
+                value={nuovoProdotto.nome}
                 onChange={(evento) =>
-                  modificaProdotto(
-                    prodotto.id,
-                    'nome',
-                    evento.target.value
-                  )
+                  setNuovoProdotto({
+                    ...nuovoProdotto,
+                    nome: evento.target.value,
+                  })
                 }
               />
 
               <textarea
-                value={prodotto.descrizione || ''}
                 placeholder="Descrizione"
+                value={nuovoProdotto.descrizione}
                 onChange={(evento) =>
-                  modificaProdotto(
-                    prodotto.id,
-                    'descrizione',
-                    evento.target.value
-                  )
+                  setNuovoProdotto({
+                    ...nuovoProdotto,
+                    descrizione: evento.target.value,
+                  })
                 }
               />
 
               <div className="admin-row">
                 <input
                   type="text"
-                  value={prodotto.simbolo || ''}
                   placeholder="Emoji"
+                  value={nuovoProdotto.simbolo}
                   onChange={(evento) =>
-                    modificaProdotto(
-                      prodotto.id,
-                      'simbolo',
-                      evento.target.value
-                    )
+                    setNuovoProdotto({
+                      ...nuovoProdotto,
+                      simbolo: evento.target.value,
+                    })
                   }
                 />
 
@@ -327,26 +585,24 @@ const esciAdmin = async () => {
                   type="number"
                   step="0.10"
                   min="0"
-                  value={prodotto.prezzo}
                   placeholder="Prezzo"
+                  value={nuovoProdotto.prezzo}
                   onChange={(evento) =>
-                    modificaProdotto(
-                      prodotto.id,
-                      'prezzo',
-                      evento.target.value
-                    )
+                    setNuovoProdotto({
+                      ...nuovoProdotto,
+                      prezzo: evento.target.value,
+                    })
                   }
                 />
               </div>
 
               <select
-                value={prodotto.categoria}
+                value={nuovoProdotto.categoria}
                 onChange={(evento) =>
-                  modificaProdotto(
-                    prodotto.id,
-                    'categoria',
-                    evento.target.value
-                  )
+                  setNuovoProdotto({
+                    ...nuovoProdotto,
+                    categoria: evento.target.value,
+                  })
                 }
               >
                 <option>Cavallo</option>
@@ -356,110 +612,209 @@ const esciAdmin = async () => {
               </select>
 
               <button
-                className="admin-delete"
-                onClick={() =>
-                  eliminaProdotto(prodotto.id)
-                }
+                className="admin-add"
+                disabled={caricamentoImmagine}
+                onClick={aggiungiProdotto}
               >
-                ELIMINA PRODOTTO
+                {caricamentoImmagine
+                  ? 'CARICAMENTO FOTO...'
+                  : '+ AGGIUNGI AL CATALOGO'}
               </button>
-            </article>
-          ))}
-        </div>
+            </div>
+          </>
+        )}
 
-        <div className="admin-new-product">
-          <h3>AGGIUNGI PRODOTTO</h3>
+        {sezioneAttiva === 'impostazioni' && (
+          <div className="admin-settings">
+            <h3>GESTIONE SITO</h3>
 
-          <label>
-            Foto prodotto
-            <input
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              disabled={caricamentoImmagine}
-              onChange={(evento) =>
-                setImmagineNuovoProdotto(
-                  evento.target.files?.[0] || null
-                )
-              }
-            />
-          </label>
+            {caricamentoImpostazioni ? (
+              <p>Caricamento impostazioni...</p>
+            ) : (
+              <>
+                <label>
+                  Nome attività
+                  <input
+                    type="text"
+                    value={impostazioni.business_name}
+                    onChange={(evento) =>
+                      aggiornaImpostazione(
+                        'business_name',
+                        evento.target.value
+                      )
+                    }
+                  />
+                </label>
 
-          <input
-            type="text"
-            placeholder="Nome prodotto"
-            value={nuovoProdotto.nome}
-            onChange={(evento) =>
-              setNuovoProdotto({
-                ...nuovoProdotto,
-                nome: evento.target.value,
-              })
-            }
-          />
+                <label>
+                  Sottotitolo
+                  <input
+                    type="text"
+                    value={impostazioni.subtitle}
+                    onChange={(evento) =>
+                      aggiornaImpostazione(
+                        'subtitle',
+                        evento.target.value
+                      )
+                    }
+                  />
+                </label>
 
-          <textarea
-            placeholder="Descrizione"
-            value={nuovoProdotto.descrizione}
-            onChange={(evento) =>
-              setNuovoProdotto({
-                ...nuovoProdotto,
-                descrizione: evento.target.value,
-              })
-            }
-          />
+                <label>
+                  Titolo principale homepage
+                  <input
+                    type="text"
+                    value={impostazioni.hero_title}
+                    onChange={(evento) =>
+                      aggiornaImpostazione(
+                        'hero_title',
+                        evento.target.value
+                      )
+                    }
+                  />
+                </label>
 
-          <div className="admin-row">
-            <input
-              type="text"
-              placeholder="Emoji"
-              value={nuovoProdotto.simbolo}
-              onChange={(evento) =>
-                setNuovoProdotto({
-                  ...nuovoProdotto,
-                  simbolo: evento.target.value,
-                })
-              }
-            />
+                <label>
+                  Frase sopra il titolo
+                  <input
+                    type="text"
+                    value={impostazioni.hero_subtitle}
+                    onChange={(evento) =>
+                      aggiornaImpostazione(
+                        'hero_subtitle',
+                        evento.target.value
+                      )
+                    }
+                  />
+                </label>
 
-            <input
-              type="number"
-              step="0.10"
-              min="0"
-              placeholder="Prezzo"
-              value={nuovoProdotto.prezzo}
-              onChange={(evento) =>
-                setNuovoProdotto({
-                  ...nuovoProdotto,
-                  prezzo: evento.target.value,
-                })
-              }
-            />
+                <label>
+                  Indirizzo
+                  <input
+                    type="text"
+                    value={impostazioni.address}
+                    onChange={(evento) =>
+                      aggiornaImpostazione(
+                        'address',
+                        evento.target.value
+                      )
+                    }
+                  />
+                </label>
+
+                <label>
+                  Telefono
+                  <input
+                    type="tel"
+                    value={impostazioni.phone}
+                    onChange={(evento) =>
+                      aggiornaImpostazione(
+                        'phone',
+                        evento.target.value
+                      )
+                    }
+                  />
+                </label>
+
+                <label>
+                  Numero WhatsApp
+                  <input
+                    type="tel"
+                    value={impostazioni.whatsapp}
+                    onChange={(evento) =>
+                      aggiornaImpostazione(
+                        'whatsapp',
+                        evento.target.value
+                      )
+                    }
+                  />
+                </label>
+
+                <label>
+                  Orari di apertura
+                  <textarea
+                    value={impostazioni.opening_hours}
+                    onChange={(evento) =>
+                      aggiornaImpostazione(
+                        'opening_hours',
+                        evento.target.value
+                      )
+                    }
+                  />
+                </label>
+
+                <label>
+                  Testo “Chi siamo”
+                  <textarea
+                    value={impostazioni.about_text}
+                    onChange={(evento) =>
+                      aggiornaImpostazione(
+                        'about_text',
+                        evento.target.value
+                      )
+                    }
+                  />
+                </label>
+
+                <label>
+                  Link Google Maps
+                  <input
+                    type="url"
+                    placeholder="https://..."
+                    value={impostazioni.maps_url}
+                    onChange={(evento) =>
+                      aggiornaImpostazione(
+                        'maps_url',
+                        evento.target.value
+                      )
+                    }
+                  />
+                </label>
+
+                <label>
+                  Link Instagram
+                  <input
+                    type="url"
+                    placeholder="https://..."
+                    value={impostazioni.instagram_url}
+                    onChange={(evento) =>
+                      aggiornaImpostazione(
+                        'instagram_url',
+                        evento.target.value
+                      )
+                    }
+                  />
+                </label>
+
+                <label>
+                  Link Facebook
+                  <input
+                    type="url"
+                    placeholder="https://..."
+                    value={impostazioni.facebook_url}
+                    onChange={(evento) =>
+                      aggiornaImpostazione(
+                        'facebook_url',
+                        evento.target.value
+                      )
+                    }
+                  />
+                </label>
+
+                <button
+                  type="button"
+                  className="admin-add"
+                  disabled={salvataggioImpostazioni}
+                  onClick={salvaImpostazioni}
+                >
+                  {salvataggioImpostazioni
+                    ? 'SALVATAGGIO...'
+                    : 'SALVA IMPOSTAZIONI'}
+                </button>
+              </>
+            )}
           </div>
-
-          <select
-            value={nuovoProdotto.categoria}
-            onChange={(evento) =>
-              setNuovoProdotto({
-                ...nuovoProdotto,
-                categoria: evento.target.value,
-              })
-            }
-          >
-            <option>Cavallo</option>
-            <option>Pollo</option>
-            <option>Maiale</option>
-            <option>Preparati</option>
-          </select>
-
-          <button
-            className="admin-add"
-            disabled={caricamentoImmagine}
-            onClick={aggiungiProdotto}
-          >
-            {caricamentoImmagine
-              ? 'CARICAMENTO FOTO...'
-              : '+ AGGIUNGI AL CATALOGO'}
-          </button>
-        </div>
+        )}
 
         <button
           className="admin-close"
@@ -467,12 +822,13 @@ const esciAdmin = async () => {
         >
           SALVA E CHIUDI
         </button>
+
         <button
-  className="admin-logout"
-  onClick={esciAdmin}
->
-  ESCI DALL’ADMIN
-</button>
+          className="admin-logout"
+          onClick={esciAdmin}
+        >
+          ESCI DALL’ADMIN
+        </button>
       </section>
     </div>
   )
