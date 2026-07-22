@@ -435,10 +435,9 @@ ${impostazioni.address}
       <footer className="site-footer">
         <strong>
           {impostazioni.business_name}
-        </strong>
-
-        <p>{impostazioni.address}</p>
-        <p>{impostazioni.opening_hours}</p>
+          </strong>
+ <p>
+  ©{new Date().getFullYear()} {impostazioni.business_name}</p>       
 
         <div className="footer-social">
           {impostazioni.instagram_url && (
