@@ -658,3 +658,29 @@
 .whatsapp-footer-button svg {
   flex-shrink: 0;
 }
+.toast-success {
+    position: fixed;
+      bottom: 95px;
+        left: 50%;
+          transform: translateX(-50%);
+            background: #16a34a;
+              color: #fff;
+                padding: 14px 22px;
+                  border-radius: 14px;
+                    font-weight: 700;
+                      box-shadow: 0 10px 25px rgba(0,0,0,.35);
+                        z-index: 9999;
+                          animation: toastShow .25s ease;
+                          }
+
+                          @keyframes toastShow {
+                            from {
+                                opacity: 0;
+                                    transform: translateX(-50%) translateY(20px);
+                                      }
+
+                                        to {
+                                            opacity: 1;
+                                                transform: translateX(-50%) translateY(0);
+                                                  }
+                                                  }

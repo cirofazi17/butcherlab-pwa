@@ -36,6 +36,7 @@ function App() {
   const [ricerca, setRicerca] = useState('')
   const [categoria, setCategoria] = useState('Tutti')
   const [adminAperto, setAdminAperto] = useState(false)
+  const [messaggioCarrello, setMessaggioCarrello] = useState('')
 
   useEffect(() => {
     const caricaDati = async () => {
@@ -183,9 +184,11 @@ function App() {
 
   cambiaQuantita(prodottoOfferta.id, 1)
 
-  alert(
-    `${prodottoOfferta.nome} aggiunto al carrello: 1 kg`
-  )
+setMessaggioCarrello(`${prodottoOfferta.nome} aggiunto al carrello`)
+
+setTimeout(() => {
+  setMessaggioCarrello('')
+  }, 2500)
 }
 
   const prodottiNelCarrello = prodotti.filter(
@@ -281,6 +284,12 @@ ${impostazioni.address}
 
   return (
     <div className="app">
+      {messaggioCarrello && (
+          <div className="toast-success">
+              ✅ {messaggioCarrello}
+                </div>
+                )}
+      )
       <header className="hero">
         <h1 className="logo">
           {impostazioni.business_name}
