@@ -447,24 +447,12 @@ ${impostazioni.address}
         </div>
       </main>
 
-      <section className="about-section">
-        <p className="catalogo-label">
-          CHI SIAMO
-        </p>
-
-        <h2>
-          {impostazioni.business_name}
-        </h2>
-
-        <p>{impostazioni.about_text}</p>
-      </section>
 
       <section className="contact-section">
         <p className="catalogo-label">
           CONTATTI
         </p>
 
-        <h2>VIENI A TROVARCI</h2>
 
         <p>
           <strong>Indirizzo:</strong>{' '}
