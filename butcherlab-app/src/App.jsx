@@ -190,7 +190,15 @@ setTimeout(() => {
   setMessaggioCarrello('')
   }, 2500)
 }
+const prodottoOfferta = prodotti.find(
+  (prodotto) =>
+    prodotto.nome.trim().toLowerCase() ===
+    impostazioni.offer_product.trim().toLowerCase()
+)
 
+const quantitaOfferta = prodottoOfferta
+  ? carrello[prodottoOfferta.id] || 0
+  : 0
   const prodottiNelCarrello = prodotti.filter(
     (prodotto) =>
       (carrello[prodotto.id] || 0) > 0
@@ -310,6 +318,7 @@ ${impostazioni.address}
 {impostazioni.offer_enabled && (
 <div
   className="offer-banner"
+  onClick={aggiungiOffertaAlCarrello}
   style={{ cursor: "pointer" }}
 >
     <span className="offer-badge">
@@ -321,26 +330,16 @@ ${impostazioni.address}
     <p className="offer-price">
       {impostazioni.offer_price}
     </p>
-<div className="quantity-control">
+{quantitaOfferta > 0 && (
   <button
     onClick={(e) => {
       e.stopPropagation()
-      const prodottoOfferta = prodotti.find(
-        (p) =>
-          p.nome.trim().toLowerCase() ===
-          impostazioni.offer_product.trim().toLowerCase()
-      )
-
-      if (prodottoOfferta) {
-        cambiaQuantita(prodottoOfferta.id, -1)
-      }
+      cambiaQuantita(prodottoOfferta.id, -1)
     }}
   >
-    −
+    ×
   </button>
-
-  
-</div>
+)}
     {impostazioni.offer_note && (
       <p className="offer-note">
         {impostazioni.offer_note}
