@@ -192,14 +192,34 @@ function App() {
     (prodotto) =>
       (carrello[prodotto.id] || 0) > 0
   )
+const prezzoOfferta = Number(
+    String(impostazioni.offer_price)
+        .replace(',', '.')
+            .replace(/[^\d.]/g, '')
+            )
 
-  const totale = prodottiNelCarrello.reduce(
-    (somma, prodotto) =>
-      somma +
-      prodotto.prezzo *
-        carrello[prodotto.id],
-    0
-  )
+            const totale = prodottiNelCarrello.reduce(
+              (somma, prodotto) => {
+                  const prodottoInOfferta =
+                        impostazioni.offer_enabled &&
+                              prodotto.nome.trim().toLowerCase() ===
+                                      impostazioni.offer_product
+                                                .trim()
+                                                          .toLowerCase() &&
+                                                                Number.isFinite(prezzoOfferta)
+
+                                                                    const prezzoDaUsare = prodottoInOfferta
+                                                                          ? prezzoOfferta
+                                                                                : prodotto.prezzo
+
+                                                                                    return (
+                                                                                          somma +
+                                                                                                prezzoDaUsare * carrello[prodotto.id]
+                                                                                                    )
+                                                                                                      },
+                                                                                                        0
+                                                                                                        )
+
 
   const numeroWhatsApp =
     impostazioni.whatsapp.replace(/\D/g, '')
