@@ -594,6 +594,9 @@
   right: 20px;
   width: 60px;
   height: 60px;
+  display: flex;
+align-items: center;
+justify-content: center;
   border-radius: 50%;
   border: none;
   background: #25D366;
