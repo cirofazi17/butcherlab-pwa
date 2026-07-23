@@ -267,6 +267,7 @@ ${impostazioni.address}
       '_blank',
       'noopener,noreferrer'
     )
+    setCarrello({})
   }
 
   const apriWhatsAppInformazioni = () => {
