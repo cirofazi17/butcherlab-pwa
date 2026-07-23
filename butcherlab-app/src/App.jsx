@@ -403,12 +403,10 @@ ${impostazioni.address}
                   </div>
 
                   <div className="product-action">
-                    <strong>
+                   <strong>
   €{' '}
-  {prodotto.prezzo
-    .toFixed(2)
-    .replace('.', ',')}{' '}
-  al kg
+  {prodotto.prezzo.toFixed(2).replace('.', ',')}
+  {prodotto.categoria === 'Box' ? '' : ' al kg'}
 </strong>
 
                     <div className="quantity-control">
