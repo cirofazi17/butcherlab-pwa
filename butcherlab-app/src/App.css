@@ -603,8 +603,8 @@
   box-shadow: 0 6px 18px rgba(0,0,0,.3);
   z-index: 9999;
 }
-
-.whatsapp-floating::before {
-  content: "💬";
-  font-size: 30px;
+.whatsapp-floating svg {
+  width: 34px;
+  height: 34px;
+  display: block;
 }
