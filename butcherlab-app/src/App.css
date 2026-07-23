@@ -706,3 +706,18 @@
                         font-size: 0.85rem;
                           }
                           }
+.admin-access-footer {
+    display: block;
+      margin: 10px auto 0;
+        background: transparent;
+          border: none;
+            color: #333;
+              font-size: 11px;
+                opacity: 0.35;
+                  cursor: pointer;
+                    transition: opacity .2s ease;
+                    }
+
+                    .admin-access-footer:hover {
+                      opacity: 0.8;
+                      }

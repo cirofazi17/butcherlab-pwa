@@ -299,14 +299,6 @@ ${impostazioni.address}
           {impostazioni.subtitle}
         </p>
 
-        <button
-          className="admin-access"
-          onClick={apriAdmin}
-          aria-label="Apri area amministratore"
-        >
-          ADMIN
-        </button>
-
         <div className="hero-content">
           <p className="hero-label">
             {impostazioni.hero_subtitle}
@@ -541,6 +533,14 @@ ${impostazioni.address}
             </a>
           )}
         </div>
+        <button
+          type="button"
+            className="admin-access-footer"
+              onClick={apriAdmin}
+                aria-label="Apri area amministratore"
+                >
+                  Admin
+                  </button>
       </footer>
 <div className="footer-whatsapp">
   <button
