@@ -25,6 +25,11 @@ const impostazioniVuote = {
   maps_url: '',
   instagram_url: '',
   facebook_url: '',
+  offer_enabled: false,
+offer_title: 'OFFERTA DELLA SETTIMANA',
+offer_product: '',
+offer_price: '',
+offer_note: '',
 }
 
 function AdminPanel({ prodotti, setProdotti, onClose }) {
@@ -109,6 +114,11 @@ function AdminPanel({ prodotti, setProdotti, onClose }) {
       maps_url: impostazioni.maps_url.trim(),
       instagram_url: impostazioni.instagram_url.trim(),
       facebook_url: impostazioni.facebook_url.trim(),
+      offer_enabled: impostazioni.offer_enabled,
+offer_title: impostazioni.offer_title.trim(),
+offer_product: impostazioni.offer_product.trim(),
+offer_price: impostazioni.offer_price.trim(),
+offer_note: impostazioni.offer_note.trim(),
       updated_at: new Date().toISOString(),
     }
 
@@ -800,7 +810,82 @@ function AdminPanel({ prodotti, setProdotti, onClose }) {
                     }
                   />
                 </label>
+                <div className="admin-offer-section">
+  <h4>OFFERTA DELLA SETTIMANA</h4>
 
+  <label className="admin-checkbox">
+    <input
+      type="checkbox"
+      checked={impostazioni.offer_enabled}
+      onChange={(evento) =>
+        aggiornaImpostazione(
+          'offer_enabled',
+          evento.target.checked
+        )
+      }
+    />
+    Mostra offerta sul sito
+  </label>
+
+  <label>
+    Titolo offerta
+    <input
+      type="text"
+      value={impostazioni.offer_title}
+      onChange={(evento) =>
+        aggiornaImpostazione(
+          'offer_title',
+          evento.target.value
+        )
+      }
+    />
+  </label>
+
+  <label>
+    Prodotto
+    <input
+      type="text"
+      placeholder="Es. Hamburger di cavallo"
+      value={impostazioni.offer_product}
+      onChange={(evento) =>
+        aggiornaImpostazione(
+          'offer_product',
+          evento.target.value
+        )
+      }
+    />
+  </label>
+
+  <label>
+    Prezzo
+    <input
+      type="text"
+      placeholder="Es. 11,90 €/kg"
+      value={impostazioni.offer_price}
+      onChange={(evento) =>
+        aggiornaImpostazione(
+          'offer_price',
+          evento.target.value
+        )
+      }
+    />
+  </label>
+
+  <label>
+    Nota
+    <input
+      type="text"
+      placeholder="Es. Valida fino a sabato"
+      value={impostazioni.offer_note}
+      onChange={(evento) =>
+        aggiornaImpostazione(
+          'offer_note',
+          evento.target.value
+        )
+      }
+    />
+  </label>
+</div>
                 <button
                   type="button"
                   className="admin-add"
