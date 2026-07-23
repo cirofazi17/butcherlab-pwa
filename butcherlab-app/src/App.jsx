@@ -289,7 +289,6 @@ ${impostazioni.address}
               ✅ {messaggioCarrello}
                 </div>
                 )}
-      )
       <header className="hero">
         <h1 className="logo">
           {impostazioni.business_name}
