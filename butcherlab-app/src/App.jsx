@@ -261,7 +261,25 @@ ${impostazioni.address}
           <h2>
             {impostazioni.hero_title}
           </h2>
+{impostazioni.offer_enabled && (
+  <div className="offer-banner">
+    <span className="offer-badge">
+      🔥 {impostazioni.offer_title}
+    </span>
 
+    <h3>{impostazioni.offer_product}</h3>
+
+    <p className="offer-price">
+      {impostazioni.offer_price}
+    </p>
+
+    {impostazioni.offer_note && (
+      <p className="offer-note">
+        {impostazioni.offer_note}
+      </p>
+    )}
+  </div>
+)}
           <a
             className="hero-button"
             href="#catalogo"
