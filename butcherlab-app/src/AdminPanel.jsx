@@ -59,7 +59,6 @@ function AdminPanel({ prodotti, setProdotti, onClose }) {
     salvataggioImpostazioni,
     setSalvataggioImpostazioni,
   ] = useState(false)
-
   useEffect(() => {
     caricaImpostazioni()
   }, [])
@@ -524,6 +523,7 @@ offer_note: impostazioni.offer_note.trim(),
                     <option>Pollo</option>
                     <option>Maiale</option>
                     <option>Preparati</option>
+                    <option>Box</option>
                   </select>
 
                   <button
@@ -619,6 +619,7 @@ offer_note: impostazioni.offer_note.trim(),
                 <option>Pollo</option>
                 <option>Maiale</option>
                 <option>Preparati</option>
+                <option>Box</option>
               </select>
 
               <button

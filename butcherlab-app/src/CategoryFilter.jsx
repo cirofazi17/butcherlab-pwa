@@ -4,6 +4,7 @@ const categorie = [
           'Pollo',
             'Maiale',
               'Preparati',
+              'Box',
               ]
 
               function CategoryFilter({ categoriaAttiva, onChange }) {
