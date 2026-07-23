@@ -310,7 +310,6 @@ ${impostazioni.address}
 {impostazioni.offer_enabled && (
 <div
   className="offer-banner"
-  onClick={aggiungiOffertaAlCarrello}
   style={{ cursor: "pointer" }}
 >
     <span className="offer-badge">
@@ -322,7 +321,33 @@ ${impostazioni.address}
     <p className="offer-price">
       {impostazioni.offer_price}
     </p>
+<div className="quantity-control">
+  <button
+    onClick={(e) => {
+      e.stopPropagation()
+      const prodottoOfferta = prodotti.find(
+        (p) =>
+          p.nome.trim().toLowerCase() ===
+          impostazioni.offer_product.trim().toLowerCase()
+      )
 
+      if (prodottoOfferta) {
+        cambiaQuantita(prodottoOfferta.id, -1)
+      }
+    }}
+  >
+    −
+  </button>
+
+  <button
+    onClick={(e) => {
+      e.stopPropagation()
+      aggiungiOffertaAlCarrello()
+    }}
+  >
+    +
+  </button>
+</div>
     {impostazioni.offer_note && (
       <p className="offer-note">
         {impostazioni.offer_note}
