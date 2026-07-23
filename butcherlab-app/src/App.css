@@ -588,29 +588,7 @@
 .admin-logout:hover {
   background: rgba(255, 70, 70, 0.1);
 }
-.whatsapp-floating {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 60px;
-  height: 60px;
-  display: flex;
-align-items: center;
-justify-content: center;
-  border-radius: 50%;
-  border: none;
-  background: #25D366;
-  color: white;
-  font-size: 0;
-  cursor: pointer;
-  box-shadow: 0 6px 18px rgba(0,0,0,.3);
-  z-index: 9999;
-}
-.whatsapp-floating svg {
-  width: 40px;
-  height: 40px;
-  display: block;
-}
+
 .offer-banner {
   margin: 24px 0;
   padding: 20px;
