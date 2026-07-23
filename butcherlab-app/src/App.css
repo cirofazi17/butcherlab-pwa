@@ -163,7 +163,6 @@
     font-size: 16px;
     white-space: nowrap;
     display: block;
-    min-width: 120px;
 }
 
                                                                             .product-action button {
@@ -726,3 +725,19 @@
     opacity: 1;
     transform: scale(1.05);
 }  
+@media (max-width: 768px) {
+  .product-action {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .product-action strong {
+    white-space: nowrap;
+    width: auto;
+  }
+
+  .quantity-control {
+    width: 100%;
+  }
+}
