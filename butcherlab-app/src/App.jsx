@@ -162,6 +162,31 @@ function App() {
       ),
     }))
   }
+  const aggiungiOffertaAlCarrello = () => {
+  const nomeOfferta = impostazioni.offer_product
+    .trim()
+    .toLowerCase()
+
+  const prodottoOfferta = prodotti.find(
+    (prodotto) =>
+      prodotto.nome
+        .trim()
+        .toLowerCase() === nomeOfferta
+  )
+
+  if (!prodottoOfferta) {
+    alert(
+      'Prodotto in offerta non trovato nel catalogo.'
+    )
+    return
+  }
+
+  cambiaQuantita(prodottoOfferta.id, 1)
+
+  alert(
+    `${prodottoOfferta.nome} aggiunto al carrello: 1 kg`
+  )
+}
 
   const prodottiNelCarrello = prodotti.filter(
     (prodotto) =>
@@ -262,7 +287,11 @@ ${impostazioni.address}
             {impostazioni.hero_title}
           </h2>
 {impostazioni.offer_enabled && (
-  <div className="offer-banner">
+<div
+  className="offer-banner"
+  onClick={aggiungiOffertaAlCarrello}
+  style={{ cursor: "pointer" }}
+>
     <span className="offer-badge">
       🔥 {impostazioni.offer_title}
     </span>
