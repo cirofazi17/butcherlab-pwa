@@ -159,9 +159,12 @@
                                                                         }
 
                                                                         .product-action strong {
-                                                                          color: #c8a35f;
-                                                                            font-size: 16px;
-                                                                            }
+    color: #c8a35f;
+    font-size: 16px;
+    white-space: nowrap;
+    display: block;
+    min-width: 120px;
+}
 
                                                                             .product-action button {
                                                                               width: 42px;
