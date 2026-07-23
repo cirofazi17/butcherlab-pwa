@@ -339,14 +339,7 @@ ${impostazioni.address}
     −
   </button>
 
-  <button
-    onClick={(e) => {
-      e.stopPropagation()
-      aggiungiOffertaAlCarrello()
-    }}
-  >
-    +
-  </button>
+  
 </div>
     {impostazioni.offer_note && (
       <p className="offer-note">
