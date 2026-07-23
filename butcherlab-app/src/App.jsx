@@ -332,6 +332,7 @@ ${impostazioni.address}
     </p>
 {quantitaOfferta > 0 && (
   <button
+  className="offer-remove"
     onClick={(e) => {
       e.stopPropagation()
       cambiaQuantita(prodottoOfferta.id, -1)

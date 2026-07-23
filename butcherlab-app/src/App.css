@@ -739,5 +739,25 @@
 
   .quantity-control {
     width: 100%;
-  }
+  }.offer-remove {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: #c62828;
+  color: white;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 12px auto 0;
+  transition: 0.2s;
+}
+
+.offer-remove:hover {
+  background: #a91f1f;
+  transform: scale(1.08);
+}
 }
