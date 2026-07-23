@@ -599,6 +599,7 @@
 }
 
 .offer-badge {
+  animation: offerPulse 2.4s ease-in-out infinite;
   display: inline-block;
   background: #d4a017;
   color: #000;
@@ -684,3 +685,15 @@
                                                 transform: translateX(-50%) translateY(0);
                                                   }
                                                   }
+@keyframes offerPulse {
+    0%,
+      100% {
+          transform: scale(1);
+              box-shadow: 0 0 0 rgba(212, 160, 23, 0);
+                }
+
+                  50% {
+                      transform: scale(1.035);
+                          box-shadow: 0 0 18px rgba(212, 160, 23, 0.45);
+                            }
+                            }
