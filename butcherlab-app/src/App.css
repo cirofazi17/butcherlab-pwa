@@ -648,3 +648,9 @@ justify-content: center;
   font-size: 0.95rem;
   margin-top: 8px;
 }
+@media (max-width: 768px) {
+  .whatsapp-floating {
+    bottom: 110px;
+    right: 20px;
+  }
+}
