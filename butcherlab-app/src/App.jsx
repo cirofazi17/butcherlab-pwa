@@ -484,16 +484,17 @@ ${impostazioni.address}
           )}
         </div>
       </footer>
-
-      <button
-        type="button"
-        className="whatsapp-floating"
-        onClick={apriWhatsAppInformazioni}
-        aria-label="Contattaci su WhatsApp"
-      >
-<FaWhatsapp size={34} />
-      </button>
-
+<div className="footer-whatsapp">
+  <button
+    type="button"
+    className="whatsapp-footer-button"
+    onClick={apriWhatsAppInformazioni}
+    aria-label="Contattaci su WhatsApp"
+  >
+    <FaWhatsapp size={28} />
+    <span>Contattaci su WhatsApp</span>
+  </button>
+</div>
       <CartBar
         totale={totale}
         numeroProdotti={
