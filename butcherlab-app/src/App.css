@@ -697,3 +697,12 @@
                           box-shadow: 0 0 18px rgba(212, 160, 23, 0.45);
                             }
                             }
+@media (max-width: 768px) {
+    .admin-access {
+        position: absolute;
+            top: 115px;
+                right: 20px;
+                    padding: 10px 16px;
+                        font-size: 0.85rem;
+                          }
+                          }
