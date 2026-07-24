@@ -249,9 +249,9 @@ const prezzoOfferta = Number(
     const righe = prodottiNelCarrello
       .map(
         (prodotto) =>
-          `• ${prodotto.nome}: ${carrello[
-            prodotto.id
-          ].toFixed(1)} kg`
+         prodotto.categoria === 'Box'
+  ? `• ${prodotto.nome}: ${carrello[prodotto.id]} box`
+  : `• ${prodotto.nome}: ${carrello[prodotto.id].toFixed(1)} kg`
       )
       .join('\n')
 
@@ -446,7 +446,7 @@ ${impostazioni.address}
                         onClick={() =>
                           cambiaQuantita(
                             prodotto.id,
-                            -0.5
+                          prodotto.categoria === 'Box' ? -1 : -0.5
                           )
                         }
                         aria-label={`Riduci quantità di ${prodotto.nome}`}
@@ -455,14 +455,16 @@ ${impostazioni.address}
                       </button>
 
                       <span>
-                        {quantita.toFixed(1)} kg
+                        {prodotto.categoria === 'Box'
+  ? `${quantita} box`
+  : `${quantita.toFixed(1)} kg`}
                       </span>
 
                       <button
                         onClick={() =>
                           cambiaQuantita(
                             prodotto.id,
-                            0.5
+                          prodotto.categoria === 'Box' ? 1 : 0.5
                           )
                         }
                         aria-label={`Aumenta quantità di ${prodotto.nome}`}
