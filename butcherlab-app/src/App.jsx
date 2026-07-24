@@ -310,9 +310,10 @@ ${impostazioni.address}
             {impostazioni.hero_subtitle}
           </p>
 
-          <h2>
-            {impostazioni.hero_title}
-          </h2>
+         <h2 className="hero-title">
+  <span className="hero-script">La miglior carne,</span>
+  <span className="hero-bold">OGNI GIORNO</span>
+</h2>
 {impostazioni.offer_enabled && (
 <div
   className="offer-banner"
