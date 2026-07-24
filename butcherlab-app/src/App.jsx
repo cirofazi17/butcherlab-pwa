@@ -331,15 +331,29 @@ ${impostazioni.address}
       {impostazioni.offer_price}
     </p>
 {quantitaOfferta > 0 && (
-  <button
-  className="offer-remove"
-    onClick={(e) => {
-      e.stopPropagation()
-      cambiaQuantita(prodottoOfferta.id, -1)
-    }}
-  >
-    ×
-  </button>
+  <div className="offer-quantity">
+    <button
+      className="offer-quantity-button"
+      onClick={(e) => {
+        e.stopPropagation()
+        cambiaQuantita(prodottoOfferta.id, -1)
+      }}
+    >
+      −
+    </button>
+
+    <span>{quantitaOfferta}</span>
+
+    <button
+      className="offer-quantity-button"
+      onClick={(e) => {
+        e.stopPropagation()
+        cambiaQuantita(prodottoOfferta.id, 1)
+      }}
+    >
+      +
+    </button>
+  </div>
 )}
     {impostazioni.offer_note && (
       <p className="offer-note">

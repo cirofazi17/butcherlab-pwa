@@ -762,3 +762,30 @@
   transform: scale(1.08);
 }
 }
+.offer-quantity {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.offer-quantity-button {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: #c62828;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.offer-quantity span {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  min-width: 28px;
+  text-align: center;
+}
