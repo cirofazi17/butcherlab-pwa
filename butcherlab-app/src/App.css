@@ -809,3 +809,10 @@
   font-weight: 900;
   letter-spacing: 1px;
 }
+.hero-logo{
+    display:block;
+    width:100%;
+    max-width:650px;
+    margin:0 auto 20px;
+    height:auto;
+}

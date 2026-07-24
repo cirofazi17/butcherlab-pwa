@@ -6,7 +6,7 @@ import CategoryFilter from './CategoryFilter'
 import AdminPanel from './AdminPanel'
 import { supabase } from './supabase'
 import { FaWhatsapp } from "react-icons/fa";
-
+import logo from './assets/logo/logo.png'
 const impostazioniPredefinite = {
   business_name: 'BUTCHER LAB',
   subtitle: 'Macelleria e carni selezionate',
@@ -299,13 +299,11 @@ ${impostazioni.address}
                 </div>
                 )}
       <header className="hero">
-        <h1 className="logo">
-          {impostazioni.business_name}
-        </h1>
-
-        <p className="subtitle">
-          {impostazioni.subtitle}
-        </p>
+      <img
+  src={logo}
+  alt="BUTCHER LAB"
+  className="hero-logo"
+/>
 
         <div className="hero-content">
           <p className="hero-label">
