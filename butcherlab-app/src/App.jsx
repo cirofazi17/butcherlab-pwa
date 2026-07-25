@@ -7,6 +7,11 @@ import AdminPanel from './AdminPanel'
 import { supabase } from './supabase'
 import { FaWhatsapp } from "react-icons/fa";
 import logo from './assets/logo/logo.png'
+import cavalloImg from './assets/categories/cavallo.png'
+import polloImg from './assets/categories/pollo.png'
+import maialeImg from './assets/categories/maiale.png'
+import preparatiImg from './assets/categories/preparati.png'
+import boxImg from './assets/categories/box.png'
 const impostazioniPredefinite = {
   business_name: 'BUTCHER LAB',
   subtitle: 'Macelleria e carni selezionate',
@@ -31,6 +36,33 @@ function App() {
   const [impostazioni, setImpostazioni] = useState(
     impostazioniPredefinite
   )
+  const categorieHome = [
+  {
+    nome: 'Cavallo',
+    immagine: cavalloImg,
+    filtro: 'Cavallo'
+  },
+  {
+    nome: 'Pollo',
+    immagine: polloImg,
+    filtro: 'Pollo'
+  },
+  {
+    nome: 'Maiale',
+    immagine: maialeImg,
+    filtro: 'Maiale'
+  },
+  {
+    nome: 'Preparati',
+    immagine: preparatiImg,
+    filtro: 'Preparati'
+  },
+  {
+    nome: 'Box',
+    immagine: boxImg,
+    filtro: 'Box'
+  }
+]
 
   const [carrello, setCarrello] = useState({})
   const [ricerca, setRicerca] = useState('')
@@ -400,6 +432,32 @@ ${impostazioni.address}
               Nessun prodotto trovato.
             </p>
           )}
+<section className="category-grid">
+  <button className="category-card">
+    <img src={cavalloImg} alt="Cavallo" />
+    <span>Cavallo</span>
+  </button>
+
+  <button className="category-card">
+    <img src={polloImg} alt="Pollo" />
+    <span>Pollo</span>
+  </button>
+
+  <button className="category-card">
+    <img src={maialeImg} alt="Maiale" />
+    <span>Maiale</span>
+  </button>
+
+  <button className="category-card">
+    <img src={preparatiImg} alt="Preparati" />
+    <span>Preparati</span>
+  </button>
+
+  <button className="category-card">
+    <img src={boxImg} alt="Box" />
+    <span>Box</span>
+  </button>
+</section>
 
         <div className="products">
           {prodottiFiltrati.map(
