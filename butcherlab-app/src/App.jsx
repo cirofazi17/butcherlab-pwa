@@ -12,6 +12,8 @@ import polloImg from './assets/categories/pollo.png'
 import maialeImg from './assets/categories/maiale.png'
 import preparatiImg from './assets/categories/preparati.png'
 import boxImg from './assets/categories/box.png'
+import { Link } from 'react-router-dom'
+import ProductGrid from './components/ProductGrid'
 const impostazioniPredefinite = {
   business_name: 'BUTCHER LAB',
   subtitle: 'Macelleria e carni selezionate',
@@ -29,6 +31,7 @@ const impostazioniPredefinite = {
 }
 
 function App() {
+
   const [prodotti, setProdotti] = useState([])
   const [databaseCaricato, setDatabaseCaricato] =
     useState(false)
@@ -165,6 +168,7 @@ function App() {
     (prodotto) => {
       const testo =
         `${prodotto.nome} ${prodotto.descrizione || ''}`.toLowerCase()
+    
 
       const corrispondeRicerca = testo.includes(
         ricerca.toLowerCase()
@@ -433,10 +437,13 @@ ${impostazioni.address}
             </p>
           )}
 <section className="category-grid">
-  <button className="category-card">
-    <img src={cavalloImg} alt="Cavallo" />
-    <span>Cavallo</span>
-  </button>
+<Link
+  to="/categoria/cavallo"
+  
+  className="category-card"
+>
+  <img src={cavalloImg} alt="Cavallo" />
+</Link>
 
   <button className="category-card">
     <img src={polloImg} alt="Pollo" />
@@ -459,82 +466,11 @@ ${impostazioni.address}
   </button>
 </section>
 
-        <div className="products">
-          {prodottiFiltrati.map(
-            (prodotto) => {
-              const quantita =
-                carrello[prodotto.id] || 0
-
-              return (
-                <article
-                  className="product-card"
-                  key={prodotto.id}
-                >
-                  <div className="product-image">
-                    {prodotto.immagine_url ? (
-                      <img
-                        src={
-                          prodotto.immagine_url
-                        }
-                        alt={prodotto.nome}
-                        className="product-image-photo"
-                      />
-                    ) : (
-                      prodotto.simbolo
-                    )}
-                  </div>
-
-                  <div className="product-info">
-                    <h3>{prodotto.nome}</h3>
-                    <p>
-                      {prodotto.descrizione}
-                    </p>
-                  </div>
-
-                  <div className="product-action">
-                   <strong>
-  €{' '}
-  {prodotto.prezzo.toFixed(2).replace('.', ',')}
-  {prodotto.categoria === 'Box' ? '' : ' al kg'}
-</strong>
-
-                    <div className="quantity-control">
-                      <button
-                        onClick={() =>
-                          cambiaQuantita(
-                            prodotto.id,
-                          prodotto.categoria === 'Box' ? -1 : -0.5
-                          )
-                        }
-                        aria-label={`Riduci quantità di ${prodotto.nome}`}
-                      >
-                        −
-                      </button>
-
-                      <span>
-                        {prodotto.categoria === 'Box'
-  ? `${quantita} box`
-  : `${quantita.toFixed(1)} kg`}
-                      </span>
-
-                      <button
-                        onClick={() =>
-                          cambiaQuantita(
-                            prodotto.id,
-                          prodotto.categoria === 'Box' ? 1 : 0.5
-                          )
-                        }
-                        aria-label={`Aumenta quantità di ${prodotto.nome}`}
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              )
-            }
-          )}
-        </div>
+        <ProductGrid
+  prodotti={prodottiFiltrati}
+  carrello={carrello}
+  cambiaQuantita={cambiaQuantita}
+/>
       </main>
 
 
