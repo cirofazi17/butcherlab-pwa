@@ -7,13 +7,15 @@ export default function ProductGrid({
     <div className="products">
       {prodotti.map((prodotto) => {
         const quantita = carrello[prodotto.id] || 0
+        const esaurito = prodotto.available === false
 
         return (
           <article
-            className="product-card"
+            className={esaurito ? 'product-card soldout' : 'product-card'}
             key={prodotto.id}
           >
             <div className="product-image">
+              {esaurito && <span className="product-soldout-label">ESAURITO</span>}
               {prodotto.immagine_url ? (
                 <img
                   src={prodotto.immagine_url}
@@ -40,6 +42,7 @@ export default function ProductGrid({
 
               <div className="quantity-control">
                 <button
+                  disabled={esaurito}
                   onClick={() =>
                     cambiaQuantita(
                       prodotto.id,
@@ -59,6 +62,7 @@ export default function ProductGrid({
                 </span>
 
                 <button
+                  disabled={esaurito}
                   onClick={() =>
                     cambiaQuantita(
                       prodotto.id,

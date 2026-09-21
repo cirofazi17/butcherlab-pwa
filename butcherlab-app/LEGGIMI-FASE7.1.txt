@@ -1,0 +1,7 @@
+FASE 7.1 - Correzione orari finali
+
+Gli orari di ritiro includono ora anche:
+- 13:00 come ultimo slot della fascia mattutina
+- 20:00 come ultimo slot della fascia serale
+
+Non serve eseguire query su Supabase.

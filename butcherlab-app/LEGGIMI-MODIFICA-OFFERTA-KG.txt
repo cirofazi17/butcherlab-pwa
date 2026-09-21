@@ -1,0 +1,8 @@
+MODIFICA OFFERTA DELLA SETTIMANA - QUANTITÀ IN KG
+
+- Il primo tocco sull'offerta aggiunge 0,5 kg.
+- I pulsanti + e - aumentano o diminuiscono di 0,5 kg.
+- La quantità viene mostrata come 0,5 kg, 1 kg, 1,5 kg, 2 kg, ecc.
+- Il prezzo dell'offerta mostra sempre la dicitura "al kg".
+- Il totale del carrello viene calcolato automaticamente in base ai kg selezionati.
+- Nessuna animazione Motion è inclusa: il progetto parte dalla versione originale.

@@ -1,0 +1,15 @@
+BUTCHER LAB — FASE 9
+
+Novità:
+- La schermata premium appare a ogni apertura del sito.
+- Alla prima visita mostra “BENVENUTO”.
+- Dalla seconda visita mostra “BENTORNATO”.
+- Rimossi il popup e i pulsanti “INIZIA” e “NON MOSTRARE PIÙ”.
+- Il catalogo si apre automaticamente dopo circa 1,8 secondi.
+- Nessuna modifica richiesta a Supabase.
+
+Per disattivare la schermata:
+Apri src/LaunchExperience.jsx e modifica:
+export const ENABLE_SPLASH_SCREEN = true
+in:
+export const ENABLE_SPLASH_SCREEN = false

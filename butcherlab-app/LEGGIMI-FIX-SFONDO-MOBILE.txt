@@ -1,0 +1,11 @@
+FIX DEFINITIVO SFONDO MOBILE
+
+- L'immagine mobile si trova ora anche in public/butcherlab-background-mobile.webp.
+- Su smartphone lo sfondo viene applicato direttamente al contenitore .app.
+- Le sezioni principali restano trasparenti.
+- Dopo la pubblicazione, chiudere e riaprire Chrome oppure cancellare i dati del sito se appare ancora la vecchia versione.
+
+Per vedere il sito nella rete locale usare:
+npm.cmd run dev -- --host
+
+Attenzione: servono due trattini separati prima di --host.

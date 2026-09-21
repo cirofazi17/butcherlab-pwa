@@ -1,0 +1,6 @@
+FIX SFONDO MOBILE SENZA GIUNZIONI
+
+- Non è stata creata o sostituita alcuna immagine.
+- È stata eliminata la ripetizione verticale dello sfondo.
+- Su smartphone viene usata una sola immagine fissa dietro a tutta la pagina.
+- Non sono più visibili linee di stacco tra tre copie dell'immagine.

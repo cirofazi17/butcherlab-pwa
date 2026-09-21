@@ -1,0 +1,1 @@
+Ripristinata esclusivamente l’apertura originale del carrello: overlay fisso sopra la pagina e drawer laterale. Sfondo e barra carrello invariati.

@@ -1,0 +1,17 @@
+BUTCHER LAB - FASE 11
+
+Novità:
+- La schermata iniziale resta attiva a ogni apertura.
+- Durata: circa 3 secondi.
+- BENVENUTO alla prima visita e BENTORNATO alle successive.
+- La frase sotto al saluto cambia casualmente a ogni ingresso.
+- La stessa frase non viene mostrata due volte consecutive.
+
+Non sono necessarie modifiche a Supabase.
+
+Avvio locale:
+  npm.cmd install
+  npm.cmd run dev
+
+Pubblicazione:
+  vercel.cmd --prod

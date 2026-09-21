@@ -1,0 +1,6 @@
+BUTCHER LAB - FASE 10
+
+Schermata iniziale estesa a circa 3 secondi.
+La linea dorata e la dissolvenza finale sono state sincronizzate con la nuova durata.
+Il comportamento Benvenuto/Bentornato resta invariato.
+Non servono modifiche a Supabase.

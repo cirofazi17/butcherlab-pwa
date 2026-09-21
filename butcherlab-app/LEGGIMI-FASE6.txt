@@ -1,0 +1,18 @@
+BUTCHER LAB — FASE 6
+ORDINI SEMPRE ATTIVI
+
+Modifiche:
+- Gli ordini possono essere inviati a qualsiasi ora.
+- Le fasce 08:00–13:00 e 17:00–20:00 servono solo per scegliere il ritiro.
+- Fuori fascia vengono proposti automaticamente i prossimi orari disponibili.
+- La domenica non vengono proposti ritiri, ma l’ordine può comunque essere inviato per il lunedì.
+- Il comando manuale nell’Admin può ancora sospendere temporaneamente gli ordini.
+
+Non sono necessarie nuove query SQL su Supabase.
+
+Avvio locale:
+1. npm.cmd install
+2. npm.cmd run dev
+
+Pubblicazione:
+vercel.cmd --prod

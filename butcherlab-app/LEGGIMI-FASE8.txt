@@ -1,0 +1,25 @@
+FASE 8 — SCHERMATA INIZIALE PREMIUM
+
+Novità:
+- schermata nera con logo BUTCHER LAB;
+- linea dorata animata;
+- apertura del sito con dissolvenza;
+- messaggio di benvenuto alla prima visita.
+
+COME TOGLIERLA
+Apri src/LaunchExperience.jsx e cambia:
+
+export const ENABLE_SPLASH_SCREEN = true
+
+in:
+
+export const ENABLE_SPLASH_SCREEN = false
+
+Per togliere anche il messaggio di benvenuto, cambia:
+
+export const ENABLE_FIRST_VISIT_WELCOME = false
+
+Per rivedere il messaggio dopo aver premuto "Non mostrare più", cancella i dati del sito dal browser oppure esegui nella console:
+localStorage.removeItem('butcherlab-welcome-dismissed')
+
+Non serve modificare Supabase.

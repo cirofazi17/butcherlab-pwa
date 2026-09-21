@@ -1,0 +1,7 @@
+CORREZIONE SFONDO MOBILE
+
+- Inserito uno sfondo verticale dedicato agli smartphone.
+- Carne, rosmarino, pepe e sale restano visibili lungo i bordi.
+- Rimossa la regola che ingrandiva l'immagine e tagliava i lati.
+- Lo sfondo viene ripetuto verticalmente durante lo scorrimento.
+- Le sezioni principali rimangono trasparenti e senza riquadri.

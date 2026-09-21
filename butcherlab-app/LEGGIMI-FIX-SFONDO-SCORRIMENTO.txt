@@ -1,0 +1,13 @@
+BUTCHER LAB — FIX FINALE SFONDO MOBILE
+
+Modifica applicata:
+- rimossa l'immagine fissa dietro allo schermo;
+- rimossa la ripetizione verticale;
+- usata una sola immagine sull'intera altezza della pagina;
+- lo sfondo ora scorre naturalmente insieme ai contenuti;
+- eliminate le giunzioni tra copie e l'effetto "sfondo bloccato".
+
+Per provare sul telefono:
+1. npm.cmd install
+2. npm.cmd run dev -- --host
+3. aprire sul telefono l'indirizzo Network mostrato dal terminale.

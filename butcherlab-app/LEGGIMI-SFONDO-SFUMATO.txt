@@ -1,0 +1,8 @@
+BUTCHER LAB - SFONDO CONTINUO SFUMATO
+
+Modifiche applicate:
+- rimossi i riquadri di sfondo da logo/hero, catalogo, contatti, footer e WhatsApp;
+- applicata una sola velatura sfumata continua sopra tutto il sito;
+- mantenuto lo sfondo con ardesia, carne e spezie;
+- eliminata la fascia nera rettangolare dietro al pulsante WhatsApp;
+- mantenuta la leggibilita' dei contenuti su desktop e smartphone.

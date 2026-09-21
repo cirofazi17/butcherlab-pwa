@@ -1,22 +1,17 @@
-function CartBar({ totale, numeroProdotti, onInvia }) {
-      if (numeroProdotti === 0) {
-          return null
-            }
+function CartBar({ totale, numeroProdotti, onApri }) {
+  if (numeroProdotti === 0) return null
 
-              return (
-                  <button className="cart-bar-fixed" onClick={onInvia}>
-                        <span className="cart-icon">🛒</span>
+  return (
+    <button className="cart-bar-fixed" onClick={onApri} type="button" aria-label="Apri il carrello">
+      <span className="cart-icon" aria-hidden="true">🛒</span>
+      <span className="cart-text">
+        <strong>Carrello</strong>
+        <small>{numeroProdotti} {numeroProdotti === 1 ? 'prodotto' : 'prodotti'}</small>
+      </span>
+      <span className="cart-price">€ {totale.toFixed(2).replace('.', ',')}</span>
+      <span className="cart-arrow" aria-hidden="true">›</span>
+    </button>
+  )
+}
 
-                              <span className="cart-text">
-                                      <strong>INVIA ORDINE</strong>
-                                              <small>{numeroProdotti} prodotti</small>
-                                                    </span>
-
-                                                          <span className="cart-price">
-                                                                  € {totale.toFixed(2).replace('.', ',')}
-                                                                        </span>
-                                                                            </button>
-                                                                              )
-                                                                              }
-
-                                                                              export default CartBar
+export default CartBar

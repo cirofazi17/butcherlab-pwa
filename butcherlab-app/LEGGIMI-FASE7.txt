@@ -1,0 +1,20 @@
+BUTCHER LAB — FASE 7
+Giorno e orario di ritiro separati
+
+MODIFICHE
+- Rimosso il riquadro "Ordini sempre attivi" dal carrello.
+- Aggiunto menu GIORNO.
+- Aggiunto menu ORARIO, disponibile dopo la scelta del giorno.
+- Gli orari restano ogni 30 minuti nelle fasce 08:00–13:00 e 17:00–20:00.
+- Per il giorno corrente vengono mostrati solo gli orari con almeno 30 minuti di preparazione.
+- La domenica non viene proposta per il ritiro.
+- Nel messaggio WhatsApp vengono inseriti insieme giorno e orario scelti.
+
+NON SERVONO NUOVE QUERY SUPABASE.
+
+AVVIO LOCALE
+npm.cmd install
+npm.cmd run dev
+
+PUBBLICAZIONE
+vercel.cmd --prod

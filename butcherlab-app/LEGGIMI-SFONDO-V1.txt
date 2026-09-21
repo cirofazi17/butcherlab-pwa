@@ -1,0 +1,12 @@
+BUTCHER LAB - Sfondo carne e spezie V1
+
+Modifiche incluse:
+- Sfondo scelto: versione 1 con ardesia nera centrale.
+- Carne, rosmarino, pepe e sale lungo i bordi esterni.
+- Immagine sorgente 4K: src/assets/butcherlab-background-4k.jpg.
+- Versione WebP ottimizzata usata dal sito: src/assets/butcherlab-background.webp.
+- Leggera sfumatura ai bordi e velatura centrale per mantenere leggibili i contenuti.
+- Regole responsive dedicate a desktop e smartphone.
+
+Pubblicazione:
+Sostituisci il progetto precedente con questa cartella e pubblica normalmente su Vercel.

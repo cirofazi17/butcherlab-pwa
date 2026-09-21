@@ -1,0 +1,7 @@
+Correzione sfondo mobile:
+- eliminato background-size: 100% 100%
+- nessun allungamento dell'immagine
+- unico asset verticale lungo con raccordi sfumati
+- background-size: 100% auto
+- background-repeat: no-repeat
+- background-attachment: scroll

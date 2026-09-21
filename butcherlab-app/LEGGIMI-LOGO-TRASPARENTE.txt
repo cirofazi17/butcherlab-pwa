@@ -1,0 +1,6 @@
+MODIFICA LOGO TRASPARENTE
+
+- Eliminato lo sfondo nero incorporato nel file del logo.
+- Logo, animali, coltelli e scritte sono ora direttamente sopra lo sfondo del sito.
+- Rimossi sfondo, bordo e ombra rettangolare dalla sezione hero.
+- Aggiunta solo una leggera ombra agli elementi del logo e allo slogan per mantenere la leggibilità.

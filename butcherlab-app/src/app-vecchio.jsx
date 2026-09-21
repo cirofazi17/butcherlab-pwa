@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import CartBar from './CartBar'
-import CartDrawer from './CartDrawer'
-import { formatPickupSelection, getPickupDays, getPickupTimes } from './pickup'
+import SearchBar from './SearchBar'
+import CategoryFilter from './CategoryFilter'
 import AdminPanel from './AdminPanel'
 import { supabase } from './supabase'
 import { FaWhatsapp } from "react-icons/fa";
@@ -12,8 +12,8 @@ import polloImg from './assets/categories/pollo.png'
 import maialeImg from './assets/categories/maiale.png'
 import preparatiImg from './assets/categories/preparati.png'
 import boxImg from './assets/categories/box.png'
-import offerteImg from './assets/categories/offerte.png'
 import { Link } from 'react-router-dom'
+import ProductGrid from './components/ProductGrid'
 const impostazioniPredefinite = {
   business_name: 'BUTCHER LAB',
   subtitle: 'Macelleria e carni selezionate',
@@ -28,14 +28,6 @@ const impostazioniPredefinite = {
   maps_url: '',
   instagram_url: '',
   facebook_url: '',
-  offer_enabled: false,
-  offer_title: 'OFFERTA DELLA SETTIMANA',
-  offer_product: '',
-  offer_original_price: '',
-  offer_price: '',
-  offer_image_url: '',
-  offer_note: '',
-  orders_enabled: true,
 }
 
 function App() {
@@ -72,11 +64,6 @@ function App() {
     nome: 'Box',
     immagine: boxImg,
     filtro: 'Box'
-  },
-  {
-    nome: 'Offerte',
-    immagine: offerteImg,
-    filtro: 'Offerte'
   }
 ]
 
@@ -87,21 +74,10 @@ function App() {
       return {}
     }
   })
+  const [ricerca, setRicerca] = useState('')
+  const [categoria, setCategoria] = useState('Tutti')
   const [adminAperto, setAdminAperto] = useState(false)
-  const [loginAdminAperto, setLoginAdminAperto] = useState(false)
-  const [emailAdmin, setEmailAdmin] = useState('')
-  const [passwordAdmin, setPasswordAdmin] = useState('')
-  const [erroreLoginAdmin, setErroreLoginAdmin] = useState('')
-  const [loginAdminInCorso, setLoginAdminInCorso] = useState(false)
-  const [carrelloAperto, setCarrelloAperto] = useState(false)
-  const [adesso, setAdesso] = useState(() => new Date())
-  const [giornoRitiro, setGiornoRitiro] = useState('')
-  const [orarioRitiro, setOrarioRitiro] = useState('')
-
-  useEffect(() => {
-    const timer = window.setInterval(() => setAdesso(new Date()), 30000)
-    return () => window.clearInterval(timer)
-  }, [])
+  const [messaggioCarrello, setMessaggioCarrello] = useState('')
 
   useEffect(() => {
     localStorage.setItem(
@@ -141,7 +117,6 @@ function App() {
             (prodotto) => ({
               ...prodotto,
               prezzo: Number(prodotto.prezzo),
-              available: prodotto.available !== false,
             })
           )
         )
@@ -175,47 +150,53 @@ function App() {
       return
     }
 
-    setErroreLoginAdmin('')
-    setPasswordAdmin('')
-    setLoginAdminAperto(true)
-  }
+    const email = window.prompt(
+      'Inserisci la tua email amministratore'
+    )
 
-  const chiudiLoginAdmin = () => {
-    if (loginAdminInCorso) return
-    setLoginAdminAperto(false)
-    setErroreLoginAdmin('')
-    setPasswordAdmin('')
-  }
+    if (!email) return
 
-  const accediAdmin = async (event) => {
-    event.preventDefault()
+    const password = window.prompt(
+      'Inserisci la password amministratore'
+    )
 
-    const email = emailAdmin.trim()
-    if (!email || !passwordAdmin) {
-      setErroreLoginAdmin('Inserisci email e password.')
-      return
-    }
+    if (!password) return
 
-    setLoginAdminInCorso(true)
-    setErroreLoginAdmin('')
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password: passwordAdmin,
-    })
-
-    setLoginAdminInCorso(false)
+    const { error } =
+      await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      })
 
     if (error) {
       console.error('Errore login:', error)
-      setErroreLoginAdmin('Email o password non corretti.')
+      alert('Email o password non corretti')
       return
     }
 
-    setLoginAdminAperto(false)
-    setPasswordAdmin('')
     setAdminAperto(true)
   }
+
+  const prodottiFiltrati = prodotti.filter(
+    (prodotto) => {
+      const testo =
+        `${prodotto.nome} ${prodotto.descrizione || ''}`.toLowerCase()
+    
+
+      const corrispondeRicerca = testo.includes(
+        ricerca.toLowerCase()
+      )
+
+      const corrispondeCategoria =
+        categoria === 'Tutti' ||
+        prodotto.categoria === categoria
+
+      return (
+        corrispondeRicerca &&
+        corrispondeCategoria
+      )
+    }
+  )
 
   const cambiaQuantita = (id, variazione) => {
     setCarrello((attuale) => ({
@@ -250,8 +231,13 @@ function App() {
     return
   }
 
-  cambiaQuantita(prodottoOfferta.id, 0.5)
+  cambiaQuantita(prodottoOfferta.id, 1)
 
+setMessaggioCarrello(`${prodottoOfferta.nome} aggiunto al carrello`)
+
+setTimeout(() => {
+  setMessaggioCarrello('')
+  }, 2500)
 }
 const prodottoOfferta = prodotti.find(
   (prodotto) =>
@@ -264,7 +250,7 @@ const quantitaOfferta = prodottoOfferta
   : 0
   const prodottiNelCarrello = prodotti.filter(
     (prodotto) =>
-      prodotto.available !== false && (carrello[prodotto.id] || 0) > 0
+      (carrello[prodotto.id] || 0) > 0
   )
 const prezzoOfferta = Number(
     String(impostazioni.offer_price)
@@ -272,21 +258,27 @@ const prezzoOfferta = Number(
             .replace(/[^\d.]/g, '')
             )
 
-  const prezzoProdotto = (prodotto) => {
-    const prodottoInOfferta =
-      impostazioni.offer_enabled &&
-      prodotto.nome.trim().toLowerCase() ===
-        impostazioni.offer_product.trim().toLowerCase() &&
-      Number.isFinite(prezzoOfferta)
+            const totale = prodottiNelCarrello.reduce(
+              (somma, prodotto) => {
+                  const prodottoInOfferta =
+                        impostazioni.offer_enabled &&
+                              prodotto.nome.trim().toLowerCase() ===
+                                      impostazioni.offer_product
+                                                .trim()
+                                                          .toLowerCase() &&
+                                                                Number.isFinite(prezzoOfferta)
 
-    return prodottoInOfferta ? prezzoOfferta : prodotto.prezzo
-  }
+                                                                    const prezzoDaUsare = prodottoInOfferta
+                                                                          ? prezzoOfferta
+                                                                                : prodotto.prezzo
 
-  const totale = prodottiNelCarrello.reduce(
-    (somma, prodotto) =>
-      somma + prezzoProdotto(prodotto) * carrello[prodotto.id],
-    0
-  )
+                                                                                    return (
+                                                                                          somma +
+                                                                                                prezzoDaUsare * carrello[prodotto.id]
+                                                                                                    )
+                                                                                                      },
+                                                                                                        0
+                                                                                                        )
 
 
   const numeroWhatsApp =
@@ -297,57 +289,9 @@ const prezzoOfferta = Number(
       ? numeroWhatsApp
       : `39${numeroWhatsApp}`
 
-
-  const statoOrdini = {
-    aperti: impostazioni.orders_enabled !== false,
-    messaggio:
-      impostazioni.orders_enabled === false
-        ? 'Gli ordini online sono temporaneamente sospesi.'
-        : 'Puoi inviare il tuo ordine in qualsiasi momento.',
-  }
-
-  const giorniRitiroDisponibili = getPickupDays(adesso)
-  const orariRitiroDisponibili = getPickupTimes(giornoRitiro, adesso)
-  const ritiroSelezionato = formatPickupSelection(
-    giorniRitiroDisponibili,
-    giornoRitiro,
-    orarioRitiro
-  )
-
-  useEffect(() => {
-    if (
-      giornoRitiro &&
-      !giorniRitiroDisponibili.some((giorno) => giorno.value === giornoRitiro)
-    ) {
-      setGiornoRitiro('')
-      setOrarioRitiro('')
-      return
-    }
-
-    if (orarioRitiro && !orariRitiroDisponibili.includes(orarioRitiro)) {
-      setOrarioRitiro('')
-    }
-  }, [adesso, giornoRitiro, orarioRitiro, impostazioni.orders_enabled])
-
-
   const inviaOrdine = () => {
-    if (!statoOrdini.aperti) {
-      alert(statoOrdini.messaggio)
-      return
-    }
-
     if (prodottiNelCarrello.length === 0) {
       alert('Il carrello è vuoto')
-      return
-    }
-
-    if (!giornoRitiro) {
-      alert('Seleziona il giorno di ritiro')
-      return
-    }
-
-    if (!orarioRitiro) {
-      alert('Seleziona l’orario di ritiro')
       return
     }
 
@@ -369,7 +313,6 @@ Totale indicativo: € ${totale
       .toFixed(2)
       .replace('.', ',')}
 
-RITIRO: ${ritiroSelezionato}
 Ritiro e pagamento in negozio.
 ${impostazioni.address}
     `.trim()
@@ -382,8 +325,6 @@ ${impostazioni.address}
       'noopener,noreferrer'
     )
     setCarrello({})
-    setGiornoRitiro('')
-    setOrarioRitiro('')
   }
 
   const apriWhatsAppInformazioni = () => {
@@ -401,6 +342,11 @@ ${impostazioni.address}
 
   return (
     <div className="app">
+      {messaggioCarrello && (
+          <div className="toast-success">
+              ✅ {messaggioCarrello}
+                </div>
+                )}
       <header className="hero">
       <img
   src={logo}
@@ -427,51 +373,30 @@ ${impostazioni.address}
       🔥 {impostazioni.offer_title}
     </span>
 
-    <div className="offer-banner-content">
-      {impostazioni.offer_image_url && (
-        <img
-          className="offer-product-image"
-          src={impostazioni.offer_image_url}
-          alt={impostazioni.offer_product || 'Offerta della settimana'}
-        />
-      )}
+    <h3>{impostazioni.offer_product}</h3>
 
-      <div className="offer-banner-details">
-        <h3>{impostazioni.offer_product}</h3>
-
-        <div className="offer-prices">
-          {impostazioni.offer_original_price && (
-            <span className="offer-original-price">
-              {impostazioni.offer_original_price}
-              {!/\b(?:al\s*kg|\/\s*kg)\b/i.test(impostazioni.offer_original_price) && ' al kg'}
-            </span>
-          )}
-          <span className="offer-price">
-            {impostazioni.offer_price}
-            {!/\b(?:al\s*kg|\/\s*kg)\b/i.test(impostazioni.offer_price) && ' al kg'}
-          </span>
-        </div>
-      </div>
-    </div>
+    <p className="offer-price">
+      {impostazioni.offer_price}
+    </p>
 {quantitaOfferta > 0 && (
   <div className="offer-quantity">
     <button
       className="offer-quantity-button"
       onClick={(e) => {
         e.stopPropagation()
-        cambiaQuantita(prodottoOfferta.id, -0.5)
+        cambiaQuantita(prodottoOfferta.id, -1)
       }}
     >
       −
     </button>
 
-    <span>{`${Number.isInteger(quantitaOfferta) ? quantitaOfferta : quantitaOfferta.toFixed(1).replace('.', ',')} kg`}</span>
+    <span>{quantitaOfferta}</span>
 
     <button
       className="offer-quantity-button"
       onClick={(e) => {
         e.stopPropagation()
-        cambiaQuantita(prodottoOfferta.id, 0.5)
+        cambiaQuantita(prodottoOfferta.id, 1)
       }}
     >
       +
@@ -489,7 +414,7 @@ ${impostazioni.address}
             className="hero-button"
             href="#catalogo"
           >
-            ORDINA ORA
+            SCOPRI I PRODOTTI
           </a>
         </div>
       </header>
@@ -504,6 +429,26 @@ ${impostazioni.address}
 
         <h2>SCEGLI LA TUA CARNE</h2>
 
+        <SearchBar
+          valore={ricerca}
+          onChange={setRicerca}
+        />
+
+        <CategoryFilter
+          categoriaAttiva={categoria}
+          onChange={setCategoria}
+        />
+
+        {!databaseCaricato && (
+          <p>Caricamento prodotti...</p>
+        )}
+
+        {databaseCaricato &&
+          prodottiFiltrati.length === 0 && (
+            <p>
+              Nessun prodotto trovato.
+            </p>
+          )}
 <section className="category-grid">
   {categorieHome.map((categoriaHome) => (
     <Link
@@ -516,10 +461,16 @@ ${impostazioni.address}
         src={categoriaHome.immagine}
         alt={categoriaHome.nome}
       />
+      <span>{categoriaHome.nome}</span>
     </Link>
   ))}
 </section>
 
+        <ProductGrid
+  prodotti={prodottiFiltrati}
+  carrello={carrello}
+  cambiaQuantita={cambiaQuantita}
+/>
       </main>
 
 
@@ -617,115 +568,11 @@ ${impostazioni.address}
 </div>
       <CartBar
         totale={totale}
-        numeroProdotti={prodottiNelCarrello.length}
-        onApri={() => setCarrelloAperto(true)}
-      />
-
-      <CartDrawer
-        aperto={carrelloAperto}
-        prodotti={prodottiNelCarrello}
-        carrello={carrello}
-        cambiaQuantita={cambiaQuantita}
-        prezzoProdotto={prezzoProdotto}
-        totale={totale}
-        onClose={() => setCarrelloAperto(false)}
+        numeroProdotti={
+          prodottiNelCarrello.length
+        }
         onInvia={inviaOrdine}
-        ordiniAperti={statoOrdini.aperti}
-        messaggioOrdini={statoOrdini.messaggio}
-        giorniRitiro={giorniRitiroDisponibili}
-        giornoRitiro={giornoRitiro}
-        onCambiaGiornoRitiro={(giorno) => {
-          setGiornoRitiro(giorno)
-          setOrarioRitiro('')
-        }}
-        orariRitiro={orariRitiroDisponibili}
-        orarioRitiro={orarioRitiro}
-        onCambiaOrarioRitiro={setOrarioRitiro}
-        onSvuota={() => {
-          setCarrello({})
-          setGiornoRitiro('')
-          setOrarioRitiro('')
-        }}
       />
-
-      {loginAdminAperto && (
-        <div
-          className="admin-login-overlay"
-          role="presentation"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) chiudiLoginAdmin()
-          }}
-        >
-          <form
-            className="admin-login-modal"
-            onSubmit={accediAdmin}
-            aria-label="Accesso amministratore"
-          >
-            <button
-              type="button"
-              className="admin-login-close"
-              onClick={chiudiLoginAdmin}
-              aria-label="Chiudi accesso amministratore"
-              disabled={loginAdminInCorso}
-            >
-              ×
-            </button>
-
-            <p className="admin-login-label">AREA RISERVATA</p>
-            <h2>Accesso Admin</h2>
-            <p className="admin-login-description">
-              Inserisci le credenziali amministratore.
-            </p>
-
-            <label className="admin-login-field">
-              <span>Email</span>
-              <input
-                type="email"
-                value={emailAdmin}
-                onChange={(event) => setEmailAdmin(event.target.value)}
-                autoComplete="username"
-                autoFocus
-                required
-              />
-            </label>
-
-            <label className="admin-login-field">
-              <span>Password</span>
-              <input
-                type="password"
-                value={passwordAdmin}
-                onChange={(event) => setPasswordAdmin(event.target.value)}
-                autoComplete="current-password"
-                required
-              />
-            </label>
-
-            {erroreLoginAdmin && (
-              <p className="admin-login-error" role="alert">
-                {erroreLoginAdmin}
-              </p>
-            )}
-
-            <div className="admin-login-actions">
-              <button
-                type="button"
-                className="admin-login-cancel"
-                onClick={chiudiLoginAdmin}
-                disabled={loginAdminInCorso}
-              >
-                Annulla
-              </button>
-              <button
-                type="submit"
-                className="admin-login-submit"
-                disabled={loginAdminInCorso}
-              >
-                {loginAdminInCorso ? 'Accesso…' : 'Accedi'}
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
 
       {adminAperto && (
         <AdminPanel

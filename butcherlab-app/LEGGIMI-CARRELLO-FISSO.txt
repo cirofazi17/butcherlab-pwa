@@ -1,0 +1,5 @@
+Correzione applicata:
+- il carrello torna position: fixed su smartphone
+- resta visibile in basso durante lo scorrimento
+- supporto safe-area per i telefoni con barra inferiore
+- aggiunto spazio in fondo alla pagina per non coprire il contenuto

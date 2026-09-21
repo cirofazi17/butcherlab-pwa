@@ -1,0 +1,8 @@
+BUTCHER LAB — FASE 7.2
+
+- Sezione ritiro resa compatta nel carrello mobile.
+- Menu Giorno e Orario affiancati anche su smartphone.
+- Rimossa la frase informativa sotto i menu.
+- Ridotti margini, padding e altezza dei controlli.
+- Restano inclusi gli orari 13:00 e 20:00.
+- Nessuna modifica Supabase necessaria.

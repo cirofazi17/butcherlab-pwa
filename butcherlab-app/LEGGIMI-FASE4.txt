@@ -1,0 +1,15 @@
+FASE 4 - ORARI ORDINI AUTOMATICI
+
+1. Prima di usare il nuovo pannello, apri Supabase > SQL Editor.
+2. Copia ed esegui il contenuto del file: supabase-fase4-ordini.sql
+3. Avvia il progetto con:
+   npm.cmd install
+   npm.cmd run dev
+
+FUNZIONAMENTO
+- Ordini disponibili dal lunedi al sabato:
+  08:00-13:00
+  17:00-20:00
+- Fuori orario il catalogo e il carrello restano visibili.
+- Il pulsante di invio ordine viene bloccato e mostra il prossimo orario utile.
+- In Admin > Gestione sito > Ordini puoi sospendere manualmente gli ordini.
