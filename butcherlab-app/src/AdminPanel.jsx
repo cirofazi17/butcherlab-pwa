@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './supabase'
 
-const categorieCatalogo = ['Tutti', 'Cavallo', 'Pollo', 'Maiale', 'Preparati', 'Box', 'Offerte']
+const categorieCatalogo = ['Tutti', 'Cavallo', 'Vitello', 'Pollo', 'Maiale', 'Preparati', 'Box']
 
 const prodottoVuoto = {
   nome: '',

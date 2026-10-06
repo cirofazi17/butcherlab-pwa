@@ -12,7 +12,7 @@ import polloImg from './assets/categories/pollo.png'
 import maialeImg from './assets/categories/maiale.png'
 import preparatiImg from './assets/categories/preparati.png'
 import boxImg from './assets/categories/box.png'
-import offerteImg from './assets/categories/offerte.png'
+import vitelloImg from './assets/categories/vitello.png'
 import { Link } from 'react-router-dom'
 const impostazioniPredefinite = {
   business_name: 'BUTCHER LAB',
@@ -54,6 +54,11 @@ function App() {
     filtro: 'Cavallo'
   },
   {
+  nome: 'Vitello',
+  immagine: vitelloImg,
+  filtro: 'Vitello'
+},
+  {
     nome: 'Pollo',
     immagine: polloImg,
     filtro: 'Pollo'
@@ -72,11 +77,6 @@ function App() {
     nome: 'Box',
     immagine: boxImg,
     filtro: 'Box'
-  },
-  {
-    nome: 'Offerte',
-    immagine: offerteImg,
-    filtro: 'Offerte'
   }
 ]
 

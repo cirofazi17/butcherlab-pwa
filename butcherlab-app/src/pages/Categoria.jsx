@@ -13,11 +13,12 @@ const nomiCategorie = {
   maiale: 'Maiale',
   preparati: 'Preparati',
   box: 'Box',
-  offerte: 'Offerte',
+  vitello: 'Vitello',
 }
 
 const aliasCategorie = {
   cavallo: ['cavallo', 'equino', 'carne di cavallo'],
+  vitello: ['vitello', 'bovino', 'carne di vitello'],
   pollo: ['pollo', 'avicoli', 'carne di pollo'],
   maiale: ['maiale', 'suino', 'carne di maiale'],
   preparati: [
@@ -27,7 +28,6 @@ const aliasCategorie = {
     'pronto da cuocere',
   ],
   box: ['box', 'box convenienza', 'offerte box'],
-  offerte: ['offerte', 'offerta', 'promozioni', 'promozione'],
 }
 
 const impostazioniPredefinite = {
