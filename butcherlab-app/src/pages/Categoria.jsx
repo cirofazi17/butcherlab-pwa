@@ -334,11 +334,6 @@ export default function Categoria() {
           setOrarioRitiro('')
           setFulfillment({ method: '', city: 'Orta Nova' })
         }}
-        onSvuota={() => {
-          setCarrello({})
-          setGiornoRitiro('')
-          setOrarioRitiro('')
-        }}
       />
     </main>
   )
