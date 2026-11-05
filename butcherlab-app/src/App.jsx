@@ -3,6 +3,7 @@ import './App.css'
 import CartBar from './CartBar'
 import CartDrawer from './CartDrawer'
 import { formatPickupSelection, getPickupDays, getPickupTimes } from './pickup'
+import { validateFulfillment, buildFulfillmentData, formatEuro } from './deliveryRules.js'
 import AdminPanel from './AdminPanel'
 import { supabase } from './supabase'
 import { FaWhatsapp } from "react-icons/fa";
@@ -97,6 +98,7 @@ function App() {
   const [adesso, setAdesso] = useState(() => new Date())
   const [giornoRitiro, setGiornoRitiro] = useState('')
   const [orarioRitiro, setOrarioRitiro] = useState('')
+  const [fulfillment, setFulfillment] = useState({ method: '', city: 'Orta Nova' })
 
   useEffect(() => {
     const timer = window.setInterval(() => setAdesso(new Date()), 30000)
@@ -341,14 +343,16 @@ const prezzoOfferta = Number(
       return
     }
 
-    if (!giornoRitiro) {
-      alert('Seleziona il giorno di ritiro')
-      return
-    }
-
-    if (!orarioRitiro) {
-      alert('Seleziona l’orario di ritiro')
-      return
+    if (!fulfillment.method) { alert('Seleziona ritiro o consegna a domicilio'); return }
+    const consegna = fulfillment.method === 'delivery'
+    if (consegna) {
+      const problemi = validateFulfillment(totale, fulfillment)
+      if (problemi.length) { alert(problemi.join('\n')); return }
+    } else {
+      if (!giornoRitiro) { alert('Seleziona il giorno di ritiro'); return }
+      if (!orarioRitiro || !orariRitiroDisponibili.includes(orarioRitiro)) {
+        alert('Seleziona un orario di ritiro disponibile'); return
+      }
     }
 
     const righe = prodottiNelCarrello
@@ -360,19 +364,24 @@ const prezzoOfferta = Number(
       )
       .join('\n')
 
-    const messaggio = `
-NUOVO ORDINE - ${impostazioni.business_name}
+    const dettagliConsegna = consegna ? buildFulfillmentData(totale, fulfillment) : null
+    const dettagliPagamento = consegna
+      ? `CONSEGNA A DOMICILIO — ORTA NOVA\n` +
+        `Cliente: ${dettagliConsegna.recipientName}\n` +
+        `Telefono: ${dettagliConsegna.recipientPhone}\n` +
+        `Indirizzo: ${dettagliConsegna.deliveryAddress}\n` +
+        `Data: ${dettagliConsegna.deliveryDate}\n` +
+        `Fascia preferita: ${fulfillment.window === '11-13' ? '11:00–13:00' : '18:00–20:00'}\n` +
+        `Indicazioni: ${dettagliConsegna.deliveryNotes || 'Nessuna'}\n` +
+        `Prodotti: ${formatEuro(Math.round(totale * 100))}\n` +
+        `Spese di consegna: ${formatEuro(Math.round(dettagliConsegna.deliveryFee * 100))}\n` +
+        `Totale indicativo: ${formatEuro(Math.round(dettagliConsegna.total * 100))}\n` +
+        `Pagamento da concordare con il negozio. Consegna da confermare.`
+      : `Totale indicativo: ${formatEuro(Math.round(totale * 100))}\n` +
+        `RITIRO: ${ritiroSelezionato}\n` +
+        `Ritiro e pagamento in negozio.\n${impostazioni.address}`
 
-${righe}
-
-Totale indicativo: € ${totale
-      .toFixed(2)
-      .replace('.', ',')}
-
-RITIRO: ${ritiroSelezionato}
-Ritiro e pagamento in negozio.
-${impostazioni.address}
-    `.trim()
+    const messaggio = `NUOVO ORDINE - ${impostazioni.business_name}\n\n${righe}\n\n${dettagliPagamento}`
 
     window.open(
       `https://wa.me/${numeroWhatsAppInternazionale}?text=${encodeURIComponent(
@@ -384,6 +393,7 @@ ${impostazioni.address}
     setCarrello({})
     setGiornoRitiro('')
     setOrarioRitiro('')
+    setFulfillment({ method: '', city: 'Orta Nova' })
   }
 
   const apriWhatsAppInformazioni = () => {
@@ -630,6 +640,8 @@ ${impostazioni.address}
         totale={totale}
         onClose={() => setCarrelloAperto(false)}
         onInvia={inviaOrdine}
+        fulfillment={fulfillment}
+        onFulfillmentChange={setFulfillment}
         ordiniAperti={statoOrdini.aperti}
         messaggioOrdini={statoOrdini.messaggio}
         giorniRitiro={giorniRitiroDisponibili}
@@ -645,6 +657,7 @@ ${impostazioni.address}
           setCarrello({})
           setGiornoRitiro('')
           setOrarioRitiro('')
+          setFulfillment({ method: '', city: 'Orta Nova' })
         }}
       />
 

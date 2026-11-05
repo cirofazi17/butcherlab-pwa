@@ -1,3 +1,6 @@
+import DeliveryMethodSelector from './DeliveryMethodSelector.jsx'
+import { quoteOrder, formatEuro } from './deliveryRules.js'
+
 function normalizzaTesto(valore = '') {
   return String(valore)
     .normalize('NFD')
@@ -24,8 +27,12 @@ export default function CartDrawer({
   orariRitiro = [],
   orarioRitiro = '',
   onCambiaOrarioRitiro = () => {},
+  fulfillment = { method: 'pickup', city: 'Orta Nova' },
+  onFulfillmentChange = () => {},
 }) {
   if (!aperto) return null
+  const consegna = fulfillment.method === 'delivery'
+  const preventivo = quoteOrder(totale, fulfillment.method)
 
   return (
     <div className="cart-drawer-overlay" onClick={onClose}>
@@ -105,6 +112,13 @@ export default function CartDrawer({
               )
             })
           )}
+          {ordiniAperti && prodotti.length > 0 && (
+            <DeliveryMethodSelector
+              subtotal={totale}
+              value={fulfillment}
+              onChange={onFulfillmentChange}
+            />
+          )}
         </div>
 
         <div className="cart-drawer-footer">
@@ -115,7 +129,7 @@ export default function CartDrawer({
             </div>
           )}
 
-          {ordiniAperti && prodotti.length > 0 && (
+          {ordiniAperti && prodotti.length > 0 && fulfillment.method === 'pickup' && (
             <div className="pickup-time-field">
               <span>ORARIO DI RITIRO</span>
 
@@ -156,15 +170,15 @@ export default function CartDrawer({
           )}
 
           <div className="cart-drawer-total">
-            <span>TOTALE</span>
-            <strong>€ {totale.toFixed(2).replace('.', ',')}</strong>
+            <span>{consegna ? "TOTALE CON CONSEGNA" : "TOTALE"}</span>
+            <strong>{formatEuro(preventivo.totalCents)}</strong>
           </div>
 
           <button
             type="button"
             className="cart-checkout"
             onClick={onInvia}
-            disabled={prodotti.length === 0 || !ordiniAperti || !giornoRitiro || !orarioRitiro}
+            disabled={prodotti.length === 0 || !ordiniAperti || !fulfillment.method || (!consegna && (!giornoRitiro || !orarioRitiro))}
           >
             {ordiniAperti ? 'INVIA ORDINE SU WHATSAPP' : 'ORDINI NON DISPONIBILI'}
           </button>
