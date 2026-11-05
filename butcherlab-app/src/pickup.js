@@ -63,10 +63,12 @@ export function getPickupTimes(selectedDay, now = new Date()) {
   const romeNow = getRomeDate(now)
   const selectedDate = new Date(`${selectedDay}T00:00:00`)
   const preparationLimit = new Date(romeNow.getTime() + 30 * 60 * 1000)
-  const ranges = [
-    [8 * 60, 13 * 60],
-    [17 * 60, 20 * 60],
-  ]
+  const ranges = selectedDate.getDay() === 4
+    ? [[8 * 60, 13 * 60]]
+    : [
+        [8 * 60, 13 * 60],
+        [17 * 60, 20 * 60],
+      ]
   const times = []
 
   for (const [start, end] of ranges) {
